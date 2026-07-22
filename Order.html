@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สั่งซื้อเสื้อยืด (สั่งหลายสี/ไซซ์พร้อมกัน)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .order-panel {
+            flex: 2;
+            min-width: 350px;
+        }
+        .cart-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+        .panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        /* สไตล์ตารางสั่งสินค้า */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        td strong {
+            color: #2c3e50;
+        }
+        input[type="number"].matrix-input {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        /* ส่วนฟอร์มไซซ์อื่นๆ */
+        .custom-size-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        select, input[type="text"], input[type="number"].custom-qty {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button.primary-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button.primary-btn:hover { background-color: #2980b9; }
+        
+        button.checkout-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button.checkout-btn:hover { background-color: #27ae60; }
+        button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+
+        /* ตะกร้าสินค้า */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+        .cart-total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 15px;
+            color: #e74c3c;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ส่วนฟอร์มสั่งซื้อ (แบบตาราง) -->
+        <div class="panel order-panel">
+            <h2>🛒 สั่งซื้อเสื้อยืด (ตัวละ 150 บาท)</h2>
+            <p style="color: #666; font-size: 14px;">ระบุจำนวนตัวในช่องที่ต้องการสั่งซื้อ (สามารถใส่หลายช่องพร้อมกันได้)</p>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>สี / ไซซ์</th>
+                            <th>S</th>
+                            <th>M</th>
+                            <th>L</th>
+                            <th>XL</th>
+                            <th>2XL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>สีดำ</strong></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีดำ" data-size="S"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีดำ" data-size="M"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีดำ" data-size="L"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีดำ" data-size="XL"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีดำ" data-size="2XL"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>สีขาว</strong></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีขาว" data-size="S"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีขาว" data-size="M"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีขาว" data-size="L"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีขาว" data-size="XL"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีขาว" data-size="2XL"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>สีกรมท่า</strong></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีกรมท่า" data-size="S"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีกรมท่า" data-size="M"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีกรมท่า" data-size="L"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีกรมท่า" data-size="XL"></td>
+                            <td><input type="number" min="0" class="matrix-input" data-color="สีกรมท่า" data-size="2XL"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ส่วนเพิ่มไซซ์อื่นๆ -->
+            <h3 style="font-size: 16px; margin-bottom: 10px;">✨ ไซซ์พิเศษอื่นๆ (ระบุเอง)</h3>
+            <div class="custom-size-row">
+                <select id="customColor">
+                    <option value="สีดำ">สีดำ</option>
+                    <option value="สีขาว">สีขาว</option>
+                    <option value="สีกรมท่า">สีกรมท่า</option>
+                </select>
+                <input type="text" id="customSize" placeholder="เช่น 3XL, อก 50" style="flex: 1; min-width: 120px;">
+                <input type="number" id="customQty" class="custom-qty" placeholder="จำนวน" min="0" style="width: 70px;">
+            </div>
+
+            <button class="primary-btn" onclick="addAllToCart()">➕ เพิ่มรายการทั้งหมดลงตะกร้า</button>
+        </div>
+
+        <!-- ส่วนตะกร้าสินค้า -->
+        <div class="panel cart-panel">
+            <h2>🛍️ ตะกร้าสินค้า</h2>
+            <div id="cartList">
+                <p style="text-align: center; color: #777;">ยังไม่มีสินค้า</p>
+            </div>
+            <div class="cart-total" id="cartTotal">ราคารวม: 0 บาท</div>
+            <button class="checkout-btn" onclick="checkout()" id="checkoutBtn" disabled>💳 ยืนยันการสั่งซื้อ</button>
+        </div>
+    </div>
+
+    <script>
+        const pricePerItem = 150;
+        let cart = [];
+
+        function addAllToCart() {
+            let itemsAdded = 0;
+            const matrixInputs = document.querySelectorAll('.matrix-input');
+            
+            matrixInputs.forEach(input => {
+                const qty = parseInt(input.value);
+                if (qty > 0) {
+                    const color = input.getAttribute('data-color');
+                    const size = input.getAttribute('data-size');
+                    addItemData(color, size, qty);
+                    input.value = ''; 
+                    itemsAdded++;
+                }
+            });
+
+            const customSize = document.getElementById('customSize').value.trim();
+            const customQty = parseInt(document.getElementById('customQty').value);
+            
+            if (customSize !== '' && !isNaN(customQty) && customQty > 0) {
+                const customColor = document.getElementById('customColor').value;
+                addItemData(customColor, customSize, customQty);
+                document.getElementById('customSize').value = '';
+                document.getElementById('customQty').value = '';
+                itemsAdded++;
+            }
+
+            if (itemsAdded === 0) {
+                alert('กรุณากรอกจำนวนเสื้อที่ต้องการอย่างน้อย 1 รายการ');
+                return;
+            }
+
+            renderCart();
+        }
+
+        function addItemData(color, size, quantity) {
+            const existingIndex = cart.findIndex(item => item.color === color && item.size === size);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity += quantity;
+            } else {
+                cart.push({ color, size, quantity });
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function renderCart() {
+            const cartList = document.getElementById('cartList');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            cartList.innerHTML = '';
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                cartList.innerHTML = '<p style="text-align: center; color: #777;">ยังไม่มีสินค้า</p>';
+                cartTotal.innerText = 'ราคารวม: 0 บาท';
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.quantity * pricePerItem;
+                totalPrice += itemTotal;
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <div>
+                        <strong>${item.color}</strong> (ไซซ์ ${item.size}) <br>
+                        <small style="color: #666;">${item.quantity} ตัว = ฿${itemTotal.toLocaleString()}</small>
+                    </div>
+                    <div>
+                        <button class="delete-btn" onclick="removeFromCart(${index})">ลบ</button>
+                    </div>
+                `;
+                cartList.appendChild(itemDiv);
+            });
+
+            cartTotal.innerText = `ราคารวม: ${totalPrice.toLocaleString()} บาท`;
+        }
+
+        // ฟังก์ชันสั่งซื้อและส่งข้อมูลไปที่ Google Sheets
+        async function checkout() {
+            if (cart.length === 0) return;
+
+            // เปลี่ยนปุ่มเป็นสถานะกำลังโหลด
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerText = '⏳ กำลังส่งคำสั่งซื้อ...';
+
+            // เตรียมข้อมูลที่จะส่ง
+            const totalShirts = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.quantity * pricePerItem), 0);
+            
+            // สรุปรายการเสื้อทั้งหมดให้อยู่ในข้อความเดียว
+            const orderText = cart.map(item => `${item.color} (ไซซ์ ${item.size}) x${item.quantity}`).join('\n');
+
+            // จัดชุดข้อมูล (Payload)
+            const payload = {
+                orderText: orderText,
+                totalPrice: totalPrice
+            };
+
+            // *** นำ URL ที่ได้จาก Google Apps Script มาวางในเครื่องหมายคำพูดด้านล่างนี้ ***
+            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx9v5_FmQDzRTZxoUQRp3fbca-glGG1fFgXTVTMOC-FDaapOIZ-iWPgfV-maI6fCCPE3A/exec';
+
+            try {
+                // ส่งข้อมูลไปที่ Google Sheets (โหมด 'no-cors' ช่วยป้องกันปัญหาเบราว์เซอร์บล็อกข้ามโดเมน)
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                alert(`✅ สั่งซื้อสำเร็จ!\nขอบคุณที่ใช้บริการ ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว`);
+                cart = [];
+                renderCart();
+            } catch (error) {
+                alert('❌ เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง');
+                console.error(error);
+            } finally {
+                // คืนค่าปุ่มกลับมาเหมือนเดิม
+                checkoutBtn.innerText = '💳 ยืนยันการสั่งซื้อ';
+                checkoutBtn.disabled = cart.length === 0;
+            }
+        }
+    </script>
+</body>
+</html>
